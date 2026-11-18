@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #FAF8F5;
+    color: #191716;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    overflow-x: hidden;
+  }
+}
+
+/* Glassmorphism and micro-textures */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(234, 230, 223, 0.8);
+}
+
+.glass-dark {
+  background: rgba(25, 23, 22, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.stamp-like {
+  border: 3.5px solid #059669;
+  color: #059669;
+  background: rgba(209, 250, 229, 0.9);
+}
+
+.stamp-pass {
+  border: 3.5px solid #E11D48;
+  color: #E11D48;
+  background: rgba(255, 228, 230, 0.9);
+}
+
+.stamp-superlike {
+  border: 3.5px solid #D97706;
+  color: #D97706;
+  background: rgba(254, 243, 199, 0.9);
+}
+
+/* Hide scrollbars for clean app feel */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

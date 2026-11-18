@@ -1,0 +1,642 @@
+[
+  {
+    "id": "prof_1",
+    "name": "Aarav Sharma",
+    "age": 22,
+    "photo": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=800&q=80",
+    "bio": "Architecture student who will judge your coffee order and photograph old brutalist buildings.",
+    "location": "SPA Delhi",
+    "interests": ["Architecture", "Analog Photography", "Cold Brew", "Jazz"],
+    "hasLikedUser": true,
+    "dilemma": {
+      "question": "Ideal lazy Sunday morning?",
+      "options": ["Farmers market & fresh pastries", "In bed till noon with vinyl playing"],
+      "answer": 1
+    },
+    "aura": {
+      "vibeTitle": "Dusty Vinyl & Espresso",
+      "soundType": "lofi_chord",
+      "color": "#F59E0B"
+    }
+  },
+  {
+    "id": "prof_2",
+    "name": "Maya Chen",
+    "age": 21,
+    "photo": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
+    "bio": "Probably listening to indie rock or learning how to make sourdough. Tell me your worst roommate story.",
+    "location": "UC Berkeley '25",
+    "interests": ["Indie Rock", "Film Cameras", "Hiking", "Baking"],
+    "hasLikedUser": false,
+    "dilemma": {
+      "question": "Concert etiquette test:",
+      "options": ["Front row screaming lyrics", "Back near the sound booth chilling"],
+      "answer": 0
+    },
+    "aura": {
+      "vibeTitle": "Sunset Golden Hour & Indie Pop",
+      "soundType": "acoustic_warm",
+      "color": "#EC4899"
+    }
+  },
+  {
+    "id": "prof_3",
+    "name": "Rohan Mehta",
+    "age": 24,
+    "photo": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
+    "bio": "Product designer by day, pottery novice by weekend. Unapologetic anime connoisseur.",
+    "location": "South Bombay",
+    "interests": ["Ceramics", "UI Design", "Anime", "Bouldering"],
+    "hasLikedUser": true,
+    "dilemma": {
+      "question": "Road trip music dilemma:",
+      "options": ["Curated album front-to-back", "Chaotic shuffle spanning 5 genres"],
+      "answer": 1
+    },
+    "aura": {
+      "vibeTitle": "Late Night Synthesizer Calm",
+      "soundType": "lofi_chord",
+      "color": "#8B5CF6"
+    }
+  },
+  {
+    "id": "prof_4",
+    "name": "Zara Al-Mansoor",
+    "age": 23,
+    "photo": "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80",
+    "bio": "Literature master's candidate. If you have book recommendations that will destroy me emotionally, please share.",
+    "location": "Columbia University",
+    "interests": ["Classic Literature", "Poetry", "Matcha", "Museums"],
+    "hasLikedUser": true,
+    "dilemma": {
+      "question": "Rainy afternoon plan?",
+      "options": ["Lost inside a massive bookstore", "Hot tea with a thunderstorm playlist"],
+      "answer": 0
+    },
+    "aura": {
+      "vibeTitle": "Petrichor & Quiet Library",
+      "soundType": "vinyl_rain",
+      "color": "#10B981"
+    }
+  },
+  {
+    "id": "prof_5",
+    "name": "Lucas Silva",
+    "age": 25,
+    "photo": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80",
+    "bio": "DJ, rooftop plant caretaker, and documentary lover. Let’s find the best taco truck in town.",
+    "location": "Austin, TX",
+    "interests": ["House Music", "Houseplants", "Street Food", "Cycling"],
+    "hasLikedUser": false,
+    "dilemma": {
+      "question": "Friday night mood:",
+      "options": ["Rooftop sunset DJ set", "Cozy dinner party with good wine"],
+      "answer": 0
+    },
+    "aura": {
+      "vibeTitle": "Warm House Bassline",
+      "soundType": "acoustic_warm",
+      "color": "#F97316"
+    }
+  },
+  {
+    "id": "prof_6",
+    "name": "Ananya Sen",
+    "age": 22,
+    "photo": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80",
+    "bio": "Neuroscience major with an irrational soft spot for vintage thrift jackets and street dogs.",
+    "location": "Delhi University (Miranda House)",
+    "interests": ["Neuroscience", "Thrifting", "Dogs", "Film Noir"],
+    "hasLikedUser": true,
+    "dilemma": {
+      "question": "Midnight study break preference:",
+      "options": ["2 AM street chai & deep talk", "Lofi beats & chocolate digestives"],
+      "answer": 0
+    },
+    "aura": {
+      "vibeTitle": "Monsoon Breeze & Chai",
+      "soundType": "vinyl_rain",
+      "color": "#06B6D4"
+    }
+  },
+  {
+    "id": "prof_7",
+    "name": "Devansh Singhania",
+    "age": 23,
+    "photo": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80",
+    "bio": "Software engineer trying to spend more time outdoors than staring at terminal tabs. Marathon runner.",
+    "location": "IIT Bombay '24",
+    "interests": ["Running", "Open Source", "Coffee Brewing", "Sci-Fi"],
+    "hasLikedUser": false,
+    "dilemma": {
+      "question": "Vacation style:",
+      "options": ["High altitude trekking with tent", "Cozy seaside villa reading"],
+      "answer": 0
+    },
+    "aura": {
+      "vibeTitle": "Alpine Morning Echo",
+      "soundType": "night_breeze",
+      "color": "#3B82F6"
+    }
+  },
+  {
+    "id": "prof_8",
+    "name": "Chloe Dupont",
+    "age": 21,
+    "photo": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80",
+    "bio": "Art history & visual communications. Will make playlists for very specific fictional scenarios.",
+    "location": "NYU Tisch '26",
+    "interests": ["Contemporary Art", "Spotify Playlists", "Pastels", "Cinema"],
+    "hasLikedUser": true,
+    "dilemma": {
+      "question": "Museum exploration mode:",
+      "options": ["Sprint through every hall", "Sit in front of one canvas for 30 mins"],
+      "answer": 1
+    },
+    "aura": {
+      "vibeTitle": "French Pop & Velvet",
+      "soundType": "acoustic_warm",
+      "color": "#F43F5E"
+    }
+  },
+  {
+    "id": "prof_9",
+    "name": "Kabir Kapoor",
+    "age": 24,
+    "photo": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80",
+    "bio": "Filmmaker & scriptwriter. Collecting stories, eccentric conversations, and antique cameras.",
+    "location": "FTII Pune / Bandra",
+    "interests": ["Screenwriting", "Cinema", "Dark Chocolate", "Storytelling"],
+    "hasLikedUser": true,
+    "dilemma": {
+      "question": "Movie night debate:",
+      "options": ["Mind-bending psychological thriller", "Comfort Studio Ghibli classic"],
+      "answer": 1
+    },
+    "aura": {
+      "vibeTitle": "35mm Grain & Raindrop",
+      "soundType": "vinyl_rain",
+      "color": "#6366F1"
+    }
+  },
+  {
+    "id": "prof_10",
+    "name": "Elena Rostova",
+    "age": 22,
+    "photo": "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=800&q=80",
+    "bio": "Biochem research fellow. In love with botanical gardens, greenhouse smells, and synthwave.",
+    "location": "University of Toronto",
+    "interests": ["Botanicals", "Synthwave", "Tea Ceremonies", "Astronomy"],
+    "hasLikedUser": false,
+    "dilemma": {
+      "question": "Stargazing night choice:",
+      "options": ["Telescope spotting constellations", "Blanket on roof with hot cocoa"],
+      "answer": 1
+    },
+    "aura": {
+      "vibeTitle": "Starlight Synthesizer",
+      "soundType": "night_breeze",
+      "color": "#8B5CF6"
+    }
+  },
+  {
+    "id": "prof_11",
+    "name": "Tariq Farooq",
+    "age": 23,
+    "photo": "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?auto=format&fit=crop&w=800&q=80",
+    "bio": "Culinary arts graduate & culinary explorer. I test recipes on my friends; you could be next.",
+    "location": "London / Le Cordon Bleu",
+    "interests": ["Pastry Arts", "Farmers Markets", "Food History", "Wine Pairing"],
+    "hasLikedUser": true,
+    "dilemma": {
+      "question": "Dinner date vibe:",
+      "options": ["Cooking handmade pasta together", "Hidden alleyway hole-in-the-wall"],
+      "answer": 0
+    },
+    "aura": {
+      "vibeTitle": "Warm Saffron Kitchen",
+      "soundType": "lofi_chord",
+      "color": "#EAB308"
+    }
+  },
+  {
+    "id": "prof_12",
+    "name": "Riya Varma",
+    "age": 21,
+    "photo": "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=800&q=80",
+    "bio": "Law student with a theatre background. Always down for spontaneous road trips or karaoke battles.",
+    "location": "NLU Bangalore",
+    "interests": ["Debate", "Musical Theatre", "Karaoke", "Board Games"],
+    "hasLikedUser": false,
+    "dilemma": {
+      "question": "Karaoke go-to strategy:",
+      "options": ["Power ballad delivered with 100% drama", "Upbeat pop banger to get everyone dancing"],
+      "answer": 1
+    },
+    "aura": {
+      "vibeTitle": "Broadway Chords & Energy",
+      "soundType": "acoustic_warm",
+      "color": "#D946EF"
+    }
+  },
+  {
+    "id": "prof_13",
+    "name": "Siddharth Nair",
+    "age": 25,
+    "photo": "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=800&q=80",
+    "bio": "Sound engineer & ambient music producer. I can spend 4 hours analyzing reverb acoustics in an empty subway station.",
+    "location": "Berlin / Bangalore",
+    "interests": ["Audio Production", "Modular Synths", "Record Stores", "Late Walks"],
+    "hasLikedUser": true,
+    "dilemma": {
+      "question": "Soundtrack to your thoughts:",
+      "options": ["Ambient rain & slow cello", "Nostalgic 2000s indie guitar"],
+      "answer": 0
+    },
+    "aura": {
+      "vibeTitle": "Modular Echo Chamber",
+      "soundType": "night_breeze",
+      "color": "#0EA5E9"
+    }
+  },
+  {
+    "id": "prof_14",
+    "name": "Meera Joshi",
+    "age": 22,
+    "photo": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80",
+    "bio": "Psychology major exploring cognitive science. Obsessed with dream journals and Japanese stationery.",
+    "location": "Ashoka University",
+    "interests": ["Stationery", "Cognitive Science", "Fountain Pens", "Pilates"],
+    "hasLikedUser": true,
+    "dilemma": {
+      "question": "First date conversation style:",
+      "options": ["Playful banter & rapid fire trivia", "Deep philosophical tangents within 10 mins"],
+      "answer": 1
+    },
+    "aura": {
+      "vibeTitle": "Pastel Journal & Rain",
+      "soundType": "vinyl_rain",
+      "color": "#A855F7"
+    }
+  },
+  {
+    "id": "prof_15",
+    "name": "Mateo Rossi",
+    "age": 24,
+    "photo": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=800&q=80",
+    "bio": "Industrial design graduate. Passionate about sustainable materials, espresso bars, and vintage vespas.",
+    "location": "Milan / New York",
+    "interests": ["Industrial Design", "Vespa Rides", "Espresso", "Sculpture"],
+    "hasLikedUser": false,
+    "dilemma": {
+      "question": "City navigation preference:",
+      "options": ["Google maps meticulously pinned", "Getting intentionally lost in alleys"],
+      "answer": 1
+    },
+    "aura": {
+      "vibeTitle": "Milanese Golden Glow",
+      "soundType": "lofi_chord",
+      "color": "#F59E0B"
+    }
+  },
+  {
+    "id": "prof_16",
+    "name": "Isha Kulkarni",
+    "age": 23,
+    "photo": "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80",
+    "bio": "Economics analyst with a weakness for street food crawls and live jazz gigs.",
+    "location": "St. Xavier's Mumbai",
+    "interests": ["Jazz Bars", "Economics", "Cooking", "Photography"],
+    "hasLikedUser": true,
+    "dilemma": {
+      "question": "Saturday night vibe:",
+      "options": ["Dimly lit speakeasy jazz club", "Night market tasting everything"],
+      "answer": 0
+    },
+    "aura": {
+      "vibeTitle": "Saxophone Midnight Warmth",
+      "soundType": "lofi_chord",
+      "color": "#E11D48"
+    }
+  },
+  {
+    "id": "prof_17",
+    "name": "Oliver Bennett",
+    "age": 23,
+    "photo": "https://images.unsplash.com/photo-1463453091185-61582044d556?auto=format&fit=crop&w=800&q=80",
+    "bio": "Marine biology student. Certified scuba diver. If you can name 3 marine species, dinner is on me.",
+    "location": "UCLA",
+    "interests": ["Scuba Diving", "Ocean Conservation", "Surfing", "Acoustic Guitar"],
+    "hasLikedUser": false,
+    "dilemma": {
+      "question": "Beach day mood:",
+      "options": ["Catching waves early morning", "Sunset bonfire with guitars"],
+      "answer": 1
+    },
+    "aura": {
+      "vibeTitle": "Pacific Shoreline Breeze",
+      "soundType": "night_breeze",
+      "color": "#0284C7"
+    }
+  },
+  {
+    "id": "prof_18",
+    "name": "Pooja Chawla",
+    "age": 22,
+    "photo": "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=800&q=80",
+    "bio": "Creative copywriter. Can craft puns under high pressure. Dog foster parent.",
+    "location": "Gurgaon / Cyber City",
+    "interests": ["Creative Writing", "Dog Shelters", "Crossword Puzzles", "Craft Beer"],
+    "hasLikedUser": true,
+    "dilemma": {
+      "question": "Dating game breaker:",
+      "options": ["Chewing loudly", "Being rude to waitstaff"],
+      "answer": 1
+    },
+    "aura": {
+      "vibeTitle": "Coffee Shop Acoustic Hum",
+      "soundType": "acoustic_warm",
+      "color": "#14B8A6"
+    }
+  },
+  {
+    "id": "prof_19",
+    "name": "Arjun Patel",
+    "age": 25,
+    "photo": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80",
+    "bio": "Aerospace enthusiast & drone photographer. Loves high vantage points and sunset skies.",
+    "location": "Georgia Tech",
+    "interests": ["Drones", "Astrophotography", "Stargazing", "Hiking"],
+    "hasLikedUser": false,
+    "dilemma": {
+      "question": "Flight window seat:",
+      "options": ["Glued to window taking cloud photos", "Eye mask on, asleep before takeoff"],
+      "answer": 0
+    },
+    "aura": {
+      "vibeTitle": "Altitude Cloud Drift",
+      "soundType": "night_breeze",
+      "color": "#6366F1"
+    }
+  },
+  {
+    "id": "prof_20",
+    "name": "Tara Senapati",
+    "age": 21,
+    "photo": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80",
+    "bio": "Classical Odissi dancer by soul, data scientist by intellect. Big believer in cosmic synchronicities.",
+    "location": "IIT Kharagpur",
+    "interests": ["Classical Dance", "Data Science", "Sufi Music", "Chai"],
+    "hasLikedUser": true,
+    "dilemma": {
+      "question": "Serendipity belief:",
+      "options": ["Everything happens for an exact reason", "We create our own luck out of chaos"],
+      "answer": 0
+    },
+    "aura": {
+      "vibeTitle": "Sitar Harmonics & Rain",
+      "soundType": "vinyl_rain",
+      "color": "#F43F5E"
+    }
+  },
+  {
+    "id": "prof_21",
+    "name": "Karan Malhotra",
+    "age": 24,
+    "photo": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
+    "bio": "Brand strategist. I know all the hidden rooftop coffee spots in the city.",
+    "location": "LSR / Delhi",
+    "interests": ["Rooftops", "Branding", "Streetwear", "Cycling"],
+    "hasLikedUser": false,
+    "dilemma": {
+      "question": "Pick your coffee vibe:",
+      "options": ["Quiet hidden rooftop garden", "Bustling hipster roastery counter"],
+      "answer": 0
+    },
+    "aura": {
+      "vibeTitle": "Roastery Warmth & Beats",
+      "soundType": "lofi_chord",
+      "color": "#D97706"
+    }
+  },
+  {
+    "id": "prof_22",
+    "name": "Diya Reddy",
+    "age": 22,
+    "photo": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
+    "bio": "Biotech researcher by day, indie gig-hopper by night. Will teach you Telugu idioms.",
+    "location": "BITS Pilani",
+    "interests": ["Biotech", "Live Gigs", "Telugu Cinema", "Badminton"],
+    "hasLikedUser": true,
+    "dilemma": {
+      "question": "Live gig vibe:",
+      "options": ["Intimate unplugged acoustic basement", "Electric stadium with fireworks"],
+      "answer": 0
+    },
+    "aura": {
+      "vibeTitle": "Basement Acoustic Echo",
+      "soundType": "acoustic_warm",
+      "color": "#EC4899"
+    }
+  },
+  {
+    "id": "prof_23",
+    "name": "Vikram Choudhury",
+    "age": 25,
+    "photo": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80",
+    "bio": "Game developer creating cozy narrative indie games. Cat dad of two orange troublemakers.",
+    "location": "Bangalore Urban",
+    "interests": ["Game Design", "Pixel Art", "Cats", "Cozy Games"],
+    "hasLikedUser": false,
+    "dilemma": {
+      "question": "Rainy afternoon gaming pick:",
+      "options": ["Stardew Valley farm tending", "Emotional indie story game that makes you cry"],
+      "answer": 1
+    },
+    "aura": {
+      "vibeTitle": "8-Bit Nostalgia & Rain",
+      "soundType": "vinyl_rain",
+      "color": "#8B5CF6"
+    }
+  },
+  {
+    "id": "prof_24",
+    "name": "Nandini Das",
+    "age": 23,
+    "photo": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80",
+    "bio": "Journalist covering culture and environment. Lover of long train rides and yellow post-it notes.",
+    "location": "Jadavpur University Kolkata",
+    "interests": ["Investigative Writing", "Train Journeys", "Tea Stalls", "Documentaries"],
+    "hasLikedUser": true,
+    "dilemma": {
+      "question": "Train window experience:",
+      "options": ["Sleeper class with wind in face", "AC coach with warm novel"],
+      "answer": 0
+    },
+    "aura": {
+      "vibeTitle": "Monsoon Train Rhythm",
+      "soundType": "night_breeze",
+      "color": "#10B981"
+    }
+  },
+  {
+    "id": "prof_25",
+    "name": "Samir Khan",
+    "age": 24,
+    "photo": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80",
+    "bio": "Graphic novelist and illustrator. Making comics about awkward moments in everyday life.",
+    "location": "NID Ahmedabad",
+    "interests": ["Comics", "Ink Drawing", "Coffee", "Graphic Novels"],
+    "hasLikedUser": false,
+    "dilemma": {
+      "question": "Art medium duel:",
+      "options": ["Classic ink & textured paper", "Apple Pencil & Procreate"],
+      "answer": 0
+    },
+    "aura": {
+      "vibeTitle": "Ink Scratch & Soft Jazz",
+      "soundType": "lofi_chord",
+      "color": "#F97316"
+    }
+  },
+  {
+    "id": "prof_26",
+    "name": "Shreya Mukherjee",
+    "age": 22,
+    "photo": "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=800&q=80",
+    "bio": "Environmental policy researcher. Believes that small collective habits save the world.",
+    "location": "TERI SAS New Delhi",
+    "interests": ["Sustainability", "Plant Care", "Kayaking", "Podcasts"],
+    "hasLikedUser": true,
+    "dilemma": {
+      "question": "Weekend escape:",
+      "options": ["Off-grid cabin in the hills", "Coastal campsite with campfire"],
+      "answer": 1
+    },
+    "aura": {
+      "vibeTitle": "Forest Canopy Whisper",
+      "soundType": "night_breeze",
+      "color": "#059669"
+    }
+  },
+  {
+    "id": "prof_27",
+    "name": "Reyansh Rawat",
+    "age": 23,
+    "photo": "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?auto=format&fit=crop&w=800&q=80",
+    "bio": "Trekking guide and wilderness first responder. Ask me how to survive an unexpected mountain storm.",
+    "location": "Dehradun / Rishikesh",
+    "interests": ["Trekking", "Mountain Rivers", "Campfires", "Rock Climbing"],
+    "hasLikedUser": false,
+    "dilemma": {
+      "question": "Mountain summit dawn:",
+      "options": ["Waking up at 4 AM to catch first light", "Sleeping warm and watching mid-day glow"],
+      "answer": 0
+    },
+    "aura": {
+      "vibeTitle": "Himalayan Morning Chime",
+      "soundType": "acoustic_warm",
+      "color": "#2563EB"
+    }
+  },
+  {
+    "id": "prof_28",
+    "name": "Kavya Nambiar",
+    "age": 21,
+    "photo": "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=800&q=80",
+    "bio": "Philosophy undergrad. Fascinated by ethics of AI, surrealist cinema, and filter coffee perfection.",
+    "location": "Ashoka University '25",
+    "interests": ["Philosophy", "Filter Coffee", "Ethics", "Surrealism"],
+    "hasLikedUser": true,
+    "dilemma": {
+      "question": "Thought experiment duel:",
+      "options": ["Trolley problem variations", "Ship of Theseus identity dilemma"],
+      "answer": 1
+    },
+    "aura": {
+      "vibeTitle": "Contemplative Warm Drone",
+      "soundType": "lofi_chord",
+      "color": "#9333EA"
+    }
+  },
+  {
+    "id": "prof_29",
+    "name": "Aditya Verma",
+    "age": 24,
+    "photo": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=800&q=80",
+    "bio": "Urban cyclist and specialty barista. I can pull you the cleanest pour-over of your life.",
+    "location": "Hauz Khas Village",
+    "interests": ["Pour-over Coffee", "Fixed Gear Bikes", "Typewriters", "Vinyl"],
+    "hasLikedUser": false,
+    "dilemma": {
+      "question": "Morning ritual:",
+      "options": ["15-min hand grind pour-over ceremony", "Fast iced latte and out the door"],
+      "answer": 0
+    },
+    "aura": {
+      "vibeTitle": "Pour-Over Bloom & Vinyl",
+      "soundType": "vinyl_rain",
+      "color": "#B45309"
+    }
+  },
+  {
+    "id": "prof_30",
+    "name": "Sanya Chopra",
+    "age": 23,
+    "photo": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80",
+    "bio": "Fashion styling student & retro thrift hunter. Let me style an outfit for you based on your favorite album.",
+    "location": "NIFT Delhi",
+    "interests": ["Vintage Fashion", "Thrifting", "Album Art", "Textiles"],
+    "hasLikedUser": true,
+    "dilemma": {
+      "question": "Wardrobe philosophy:",
+      "options": ["Minimalist capsule neutrals only", "Expressive eclectic vintage chaos"],
+      "answer": 1
+    },
+    "aura": {
+      "vibeTitle": "Retro Chic Groove",
+      "soundType": "acoustic_warm",
+      "color": "#DB2777"
+    }
+  },
+  {
+    "id": "prof_31",
+    "name": "Manish Bansal",
+    "age": 25,
+    "photo": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=800&q=80",
+    "bio": "Fintech dev by day, standup comedy open-micer by night. I promise I don't test crowd work on first dates.",
+    "location": "Gurgaon / Cyber Hub",
+    "interests": ["Stand-up Comedy", "Fintech", "Bad Puns", "Table Tennis"],
+    "hasLikedUser": false,
+    "dilemma": {
+      "question": "Open mic disaster survival:",
+      "options": ["Acknowledge the silence and lean in", "Pivot to crowd work immediately"],
+      "answer": 0
+    },
+    "aura": {
+      "vibeTitle": "Comedy Club Spotlight & Laughs",
+      "soundType": "lofi_chord",
+      "color": "#4F46E5"
+    }
+  },
+  {
+    "id": "prof_32",
+    "name": "Alisha Mirza",
+    "age": 22,
+    "photo": "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=800&q=80",
+    "bio": "Anthropology student documentarian. Exploring forgotten food recipes and oral storytelling traditions.",
+    "location": "St. Stephen's College",
+    "interests": ["Oral Histories", "Culinary Heritage", "Folk Music", "Calligraphy"],
+    "hasLikedUser": true,
+    "dilemma": {
+      "question": "Old city exploration:",
+      "options": ["Wandering narrow lanes without map", "Historic heritage guided walk"],
+      "answer": 0
+    },
+    "aura": {
+      "vibeTitle": "Old City Twilight Melodies",
+      "soundType": "night_breeze",
+      "color": "#7C3AED"
+    }
+  }
+]
