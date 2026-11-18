@@ -2,6 +2,8 @@
 
 **Coy Discover: a swipe-based discovery experience where nothing is revealed unless it is mutual.**
 
+**Live deployment:** [https://coyapp.vercel.app/](https://coyapp.vercel.app/)
+
 ## Assignment Context
 
 This project is the take-home for the Coy SDE Intern role.
@@ -288,6 +290,8 @@ Each card returned by `GET /matches/:matchId/activities` includes `id`, `title`,
 
 ## Setup and Running
 
+For the deployed frontend, use [https://coyapp.vercel.app/](https://coyapp.vercel.app/).
+
 Prerequisites:
 
 - Node.js
@@ -335,7 +339,7 @@ You can also use the Reset Demo button in the app.
 
 ## Demo Guide
 
-1. Open `http://localhost:3000/discover`. Like **Aarav Sharma**. He is one of the seeded profiles with `hasPreLiked: true`, so it creates a match and Match Hub data.
+1. Open `https://coyapp.vercel.app/`. Like **Aarav Sharma**. He is one of the seeded profiles with `hasPreLiked: true`, so it creates a match and Match Hub data.
 2. Like **Maya Chen**. No seeded reciprocal swipe is present, so no match appears.
 3. Open Aarav’s Match Hub and complete or reveal the quiz. Aarav’s counterpart response is already simulated for the seed state.
 4. Open another seeded match and start a quiz there to show the waiting state.
@@ -374,25 +378,11 @@ The script is a manual HTTP check. It does not replace automated test coverage.
 
 Potential production next steps: authentication and per-user sessions, server-authoritative notifications, production database migrations, engagement analytics, and consent-safe matching with reporting and moderation.
 
-## Screenshots
-
-Place images in `docs/screenshots/` and update these references after capture.
-
-- [Discover deck](docs/screenshots/discover-deck.png) — TODO
-- [Swipe stamps](docs/screenshots/swipe-stamps.png) — TODO
-- [Match modal](docs/screenshots/match-modal.png) — TODO
-- [Matches page](docs/screenshots/matches.png) — TODO
-- [Quiz question](docs/screenshots/quiz-question.png) — TODO
-- [Quiz waiting](docs/screenshots/quiz-waiting.png) — TODO
-- [Quiz reveal](docs/screenshots/quiz-reveal.png) — TODO
-- [Activity cards](docs/screenshots/activity-cards.png) — TODO
-- [Mutual unlock](docs/screenshots/mutual-unlock.png) — TODO
-- [Empty state](docs/screenshots/empty-state.png) — TODO
-- [Filters](docs/screenshots/filters.png) — TODO
-
 ## Author
 
 Built by **Sahil, Full Stack Developer (MERN)**.
 
-- GitHub: [GitHub profile placeholder](https://github.com/)
-- LinkedIn: [LinkedIn profile placeholder](https://www.linkedin.com/)
+- Coy Discover: [https://coyapp.vercel.app/](https://coyapp.vercel.app/)
+- GitHub: [https://github.com/MsrSahil]
+- LinkedIn: [https://www.linkedin.com/in/mohd-swahil-5543a5259/]
+- portfolio: [https://msr-portfolio021.vercel.app/]
