@@ -1,291 +1,398 @@
-# Coy Discover — Standalone Swipe-Based Social Discovery
+# Coy Discover
 
-![Coy Discover Banner](https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1200&q=80)
+**Coy Discover: a swipe-based discovery experience where nothing is revealed unless it is mutual.**
 
-> A modern, production-quality social discovery application built with **React 18 (JSX)**, **Tailwind CSS**, **Framer Motion**, and **Node.js/Express** backed by a normalized **SQLite** database using `better-sqlite3`.
+## Assignment Context
 
-Designed around Coy’s core privacy principle: **100% Double-Blind Mutual Matching** — never reveal who liked a user unless the feeling is mutual.
+This project is the take-home for the Coy SDE Intern role.
 
----
+- **Part A:** propose and build a connected follow-up journey after a mutual match.
+- **Part B:** build a mobile-first swipe-based Discover tab with a blank Home tab.
 
-## 📑 Table of Contents
-- [1. Overview](#1-overview)
-- [2. Tech Stack](#2-tech-stack)
-- [3. Key Architectural Highlights](#3-key-architectural-highlights)
-- [4. Core Features](#4-core-features)
-  - [Swipe Experience & Gestures](#swipe-experience--gestures)
-  - [Double-Blind Mutual Matching](#double-blind-mutual-matching)
-  - [Feature #1: Smart Discovery & Compatibility Algorithm](#feature-1-smart-discovery--compatibility-algorithm)
-  - [Feature #2: Daily Discovery ("Today's Pick") & Super Like](#feature-2-daily-discovery-todays-pick--super-like)
-  - [Matches Page & In-App Messaging](#matches-page--in-app-messaging)
-  - [Discovery Filters & Detail View](#discovery-filters--detail-view)
-  - [Undo Swipe & Match Reconciliation](#undo-swipe--match-reconciliation)
-- [5. Database Schema (SQLite)](#5-database-schema-sqlite)
-- [6. Backend API Reference](#6-backend-api-reference)
-- [7. Setup & Run Instructions](#7-setup--run-instructions)
-- [8. Test Verification Scenarios](#8-test-verification-scenarios)
+The implementation uses React and Express with a fixed `user_demo` account. SQLite persists swipes, matches, quiz answers and activity responses locally.
 
----
+## Assignment Requirements
 
-## 1. Overview
-
-Coy Discover delivers a tactile, mobile-first social discovery experience inspired by the interaction quality of Bumble, Tinder, and Hinge, featuring a distinct visual identity:
-- **Palette:** Warm cream/off-white background (`#FAF8F5`) with deep charcoal typography (`#191716`) and warm coral accents (`#FF4458`).
-- **Cards:** Rounded cards (`rounded-[32px]`) with soft depth shadows, image tap carousels, verified badges, and Hinge-style prompt cards.
-- **Privacy:** Unilateral incoming likes are never exposed in feed responses or client payloads.
-
----
-
-## 2. Tech Stack
-
-- **Frontend:** React 18 (`.jsx`), Vite, Tailwind CSS, Framer Motion, Lucide React, React Router (`react-router-dom`), Canvas-Confetti.
-- **Backend:** Node.js, Express (`.js`).
-- **Database:** SQLite with `better-sqlite3` (WAL mode enabled, foreign keys, transactions).
-- **Architecture:** Clean separation of concerns with frontend in `src/` and backend in `server/`.
-
----
-
-## 3. Key Architectural Highlights
-
-```
-coy-discover/
-  server/
-    database/
-      db.js          # SQLite connection (WAL mode, transactions)
-      schema.sql     # Normalized SQLite tables & indexes
-      seed.js        # 32 seeded mock profiles + demo user
-    routes/
-      feed.js        # GET /feed (filtered & compatibility ranked)
-      swipe.js       # POST /swipe (atomic like/pass/superlike & mutual match check)
-      matches.js     # GET /matches (strictly mutual)
-      profiles.js    # GET /profiles/:id
-      discover.js    # GET /discover/stats, /daily-pick, POST /undo, /reset
-    middleware/
-      errorHandler.js
-    app.js           # Express setup, middleware, routing, dist static serving
-    server.js        # Server entry point on port 5000
-  src/
-    components/
-      SwipeCard.jsx          # Touch/mouse drag physics, spring rotation, stamps
-      ProfileCard.jsx        # Photo carousel, prompt preview, badges
-      SwipeControls.jsx      # Pass, Undo, Super Like (quota), Like, Info buttons
-      MatchModal.jsx         # Full-screen "IT'S A MATCH!" celebration
-      ProfileDetail.jsx      # Full-page view with prompt answers & photo gallery
-      FilterPanel.jsx        # Age, City, College, Interests & Compatibility filters
-      CompatibilityBadge.jsx # Estimated match score & reason popover
-      DailyPickModal.jsx     # Golden "Today's Pick" featured card
-      EmptyState.jsx         # "You've seen everyone for now" with reset actions
-      BottomNavigation.jsx   # Primary navigation (Home, Discover, Matches)
-      Toast.jsx              # Floating notification toasts
-    pages/
-      Home.jsx               # Minimal placeholder tab
-      Discover.jsx           # Main discovery application deck
-      Matches.jsx            # Dedicated mutual matches view & conversation drawer
-    hooks/
-      useFeed.js             # Feed query, filtering, deck synchronization
-      useSwipe.js            # Concurrency-safe swipe & undo management
-    services/
-      api.js                 # Centralized API service
-    utils/
-      compatibility.js       # Shared formatting helpers
-    App.jsx                  # Router, global modal management, header
-    main.jsx                 # Client entry point
-    index.css                # Tailwind base & glassmorphism utilities
-  README.md
-  package.json
-  .env.example
-  .gitignore
-```
-
----
-
-## 4. Core Features
-
-### Swipe Experience & Gestures
-- **Framer Motion Gestures:** Touch drag on mobile, mouse drag on desktop.
-- **Dynamic Stamps:**
-  - Drag Right: Glowing emerald **LIKE** stamp fades in.
-  - Drag Left: Crimson **PASS** stamp fades in.
-  - Drag Up: Golden **SUPER LIKE** stamp.
-- **Rotational Physics:** Card rotates proportional to horizontal drag (`-16deg` to `+16deg`).
-- **Thresholds & Spring Physics:** Swipes beyond 110px or velocity > 400 trigger dismissal; lesser drags snap back smoothly.
-- **Anti-Repeat Guarantee:** Once swiped, a profile is recorded in SQLite and **never shown again**.
-
-### Double-Blind Mutual Matching
-- A match is created **only** when both users like each other.
-- When User A likes User B, the backend checks if User B has an incoming like for User A.
-- Displays a celebratory full-screen modal:
-  - Both avatar rings with pulsing mutual heart.
-  - Multi-tier celebratory confetti blast.
-  - Summary of shared synergy.
-  - Direct buttons: "View in Matches" or "Continue Discovering".
-
-### Feature #1: Smart Discovery & Compatibility Algorithm
-Calculates real compatibility percentages between the demo user and every profile:
-- **Shared Interests:** +8 points per shared interest (up to 32 points).
-- **Same City:** +12 points ("Both based in San Francisco").
-- **Same College:** +10 points ("Both connected to Stanford University").
-- **Age Proximity:** +5 to +8 points.
-- **Relationship Intent:** +6 points ("Both looking for long-term connection").
-- **Explanatory Breakdown:** Tap any badge to see the 2–3 calculated reasons.
-
-### Feature #2: Daily Discovery ("Today's Pick") & Super Like
-- **Today's Pick:** Featured daily profile curated by the vibe resonance algorithm, saved in the `daily_picks` SQLite table.
-- **Super Like Action:** Dedicated golden star button with distinct animation.
-  - Counts as a like for mutual matching.
-  - Has a daily quota (3 per day) tracked in SQLite.
-
-### Matches Page & In-App Messaging
-- Dedicated section listing all mutual matches with timestamps, location, and compatibility.
-- Clicking any match opens an in-app conversation drawer with chat history and message input.
-
-### Undo Swipe & Match Reconciliation
-- Undoes the most recent swipe via `POST /undo`.
-- Restores the profile back to the top of the feed.
-- Atomically deletes any mutual match created exclusively by that swipe from the SQLite database.
-
----
-
-## 5. Database Schema (SQLite)
-
-```sql
--- Users (Seeded with 32 profiles + demo user)
-CREATE TABLE users (
-  id TEXT PRIMARY KEY,
-  name TEXT NOT NULL,
-  age INTEGER NOT NULL,
-  bio TEXT,
-  city TEXT,
-  college TEXT,
-  interests TEXT,       -- JSON array
-  photos TEXT,          -- JSON array of URLs
-  gender TEXT,
-  profession TEXT,
-  is_verified INTEGER DEFAULT 0,
-  prompts TEXT,         -- JSON array of { question, answer }
-  preferences TEXT,     -- JSON object
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
--- Swipes
-CREATE TABLE swipes (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  swiper_id TEXT NOT NULL,
-  target_id TEXT NOT NULL,
-  action TEXT NOT NULL CHECK(action IN ('like', 'pass', 'superlike')),
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE(swiper_id, target_id)
-);
-
--- Matches (Mutual connections only)
-CREATE TABLE matches (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  user_one_id TEXT NOT NULL,
-  user_two_id TEXT NOT NULL,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE(user_one_id, user_two_id)
-);
-
--- Daily Picks
-CREATE TABLE daily_picks (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  user_id TEXT NOT NULL,
-  profile_id TEXT NOT NULL,
-  pick_date TEXT NOT NULL,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE(user_id, pick_date)
-);
-```
-
----
-
-## 6. Backend API Reference
-
-| Method | Endpoint | Description |
+| Requirement | Status | Where to look |
 |---|---|---|
-| `GET` | `/feed` | Returns unswiped profiles ranked by compatibility |
-| `POST` | `/swipe` | Records `{ targetUserId, action }` and returns match outcome |
-| `GET` | `/matches` | Returns only mutual matches |
-| `GET` | `/profiles/:id` | Returns complete profile details |
-| `GET` | `/discover/stats` | Returns remaining cards, total swipes, matches, and superlike quota |
-| `GET` | `/discover/daily-pick`| Returns today's featured profile |
-| `POST` | `/undo` | Reverts the last swipe and reconciles match records |
-| `POST` | `/reset` | Re-seeds all 32 profiles for fresh testing |
-| `GET` | `/health` | Returns server health status and uptime |
+| Blank Home tab and Discover tab with bottom navigation | Implemented | `src/pages/Home.jsx`, `src/pages/Discover.jsx`, `src/components/BottomNavigation.jsx`, `src/App.jsx` |
+| 30+ seeded profiles | Implemented, 32 profiles | `server/database/seed.js` |
+| Some seeded profiles already like the demo user | Implemented | `hasPreLiked: true` entries in `server/database/seed.js` |
+| Swipe left/right with drag gestures | Implemented | `src/components/SwipeCard.jsx` |
+| Like, pass and super-like buttons | Implemented | `src/components/SwipeControls.jsx`, `src/hooks/useSwipe.js` |
+| Swiped profiles do not reappear after refresh | Implemented | `swipes` table and feed exclusion in `server/routes/feed.js` |
+| Empty state when no profiles remain | Implemented | `src/components/EmptyState.jsx` |
+| Match only on mutual likes | Implemented | `server/routes/swipe.js` |
+| “It’s a match!” screen | Implemented | `src/components/MatchModal.jsx` |
+| Matches view | Implemented | `src/pages/Matches.jsx`, `server/routes/matches.js` |
+| Incoming likes remain private until mutual | Implemented | `server/routes/swipe.js`, `server/routes/matches.js` |
+| `GET /feed` | Implemented | `server/routes/feed.js` |
+| `POST /swipe` | Implemented | `server/routes/swipe.js` |
+| `GET /matches` | Implemented | `server/routes/matches.js` |
+| State persists across reloads | Implemented | `server/database/db.js`, SQLite tables |
 
----
+## Match → Quiz → Plan
 
-## 7. Setup & Run Instructions
-
-### Prerequisites
-- Node.js 18+ or 20+ or 22+
-- npm 9+
-
-### 1. Clone & Install
-```bash
-git clone <your-repo-url>
-cd coy-discover
-npm install
+```text
+Mutual Match
+     |
+     v
+Mutual-Reveal Quiz
+     |
+     v
+Do-It-Together Activity Cards
 ```
 
-### 2. Run Options
+The Match Hub is available at `/matches/:matchId` and contains Profile, Quiz and Activities sections.
 
-#### Option A: Production / Unified Server (Express serves SQLite & built React frontend)
+### Feature 1: Mutual-Reveal Quiz
+
+After a match, both people answer the same five questions privately. Answers remain hidden until both are complete. The reveal shows the agreement count, agreements and differences side by side.
+
+- Blind until both users finish.
+- A skip stores a silent `skipped` response and is not disclosed to the other person.
+- A quiz expires three days after creation.
+- Answers are immutable: the API rejects duplicate submissions.
+- There are no percentages or labels; the reveal shows only an agreement count.
+- Questions rotate deterministically per match.
+- Interest-linked questions are prioritized, then general questions fill the set.
+
+This extends Coy’s mutual-reveal promise beyond the swipe. If a generic question bank is tiring, interest-linked questions and deterministic rotation provide more relevant choices.
+
+Implementation: `server/data/quizQuestions.js`, `server/services/quizSimulator.js`, `server/routes/matches.js`, `src/components/QuizCard.jsx`, `src/components/QuizWaiting.jsx`, `src/components/QuizReveal.jsx`.
+
+### Feature 2: Do-It-Together Activity Cards
+
+After a match, the app suggests up to three low-pressure public activities based on shared interests and, when complete, shared quiz answers.
+
+- “I’d do this” and “Not now” are private until mutual.
+- Only shared interest is returned as mutual.
+- “Withdraw” removes the demo user’s own response.
+- General fallback cards cover sparse interest overlap.
+- The selected cards remain stable for each match.
+
+This gives a match an immediate, low-pressure next step. Hand-written activities by interest reduce the risk of generic recommendations.
+
+Implementation: `server/data/activities.js`, `server/services/activitySuggester.js`, `server/services/activitySimulator.js`, `server/routes/matches.js`, `src/components/ActivityCard.jsx`, `src/components/ActivityUnlock.jsx`.
+
+## Additional Features
+
+- Smart Discovery compatibility ranking and reasons.
+- Today’s Pick.
+- Super Like with a 3-per-day quota.
+- Age, city, college, interest and compatibility filters.
+- Profile detail view and photo gallery.
+- Persistent undo for the latest swipe.
+- Match, quiz and activity cleanup when a swipe is undone.
+- Loading, error and reset states.
+- A demo reset that re-seeds users and journey state.
+
+## Tech Stack
+
+| Layer | Technology | Reason |
+|---|---|---|
+| UI | React 18 with JSX and Vite | Fast component development and local startup |
+| Styling | Tailwind CSS | Utility-based responsive styling |
+| Animation | Framer Motion | Card gestures and reveal transitions |
+| Icons | Lucide React | Consistent icon set |
+| Routing | React Router | Discover, Matches and Match Hub routes |
+| API | Express | Small modular REST API |
+| Database | SQLite through `better-sqlite3` | Persistent local data with no external database |
+| Language | JavaScript ES modules | Matches the existing Vite and Node setup |
+
+The default setup needs only Node.js and npm.
+
+## Architecture
+
+```text
+CoyAssignment/
+  server/
+    app.js / server.js             # Express app and HTTP entry point
+    test-api.js                    # Manual backend checks
+    data/                          # Quiz questions and activities
+    database/                      # db, schema and demo seed
+    routes/                        # Feed, swipe, matches, discover, profiles
+    services/                      # Quiz and activity selection/simulation
+  src/
+    App.jsx / pages/ / components/
+    hooks/                         # Feed, swipe, quiz and activity state
+    services/api.js                # Central API client
+  index.html / vite.config.js / package.json
+  README.md
+```
+
+Request flow:
+
+```text
+React component
+  -> src/services/api.js
+  -> Express route in server/routes/
+  -> SQLite transaction where a write occurs
+  -> JSON response
+```
+
+The backend is the single source of truth. Matching is decided by server-side swipe records, the demo user is fixed in `server/database/seed.js`, and write operations use SQLite transactions.
+
+## Database Schema
+
+Every foreign-key relationship uses `ON DELETE CASCADE` where supported.
+
+| Table | Columns | Constraints |
+|---|---|---|
+| `users` | `id`, `name`, `age`, `bio`, `city`, `college`, `interests`, `photos`, `gender`, `profession`, `is_verified`, `prompts`, `preferences`, `created_at` | `id` primary key |
+| `swipes` | `id`, `swiper_id`, `target_id`, `action`, `created_at` | `action` only accepts `like`, `pass`, `superlike`; unique `(swiper_id, target_id)` |
+| `matches` | `id`, `user_one_id`, `user_two_id`, `created_at` | Unique `(user_one_id, user_two_id)` |
+| `daily_picks` | `id`, `user_id`, `profile_id`, `pick_date`, `created_at` | Unique `(user_id, pick_date)` |
+| `match_quizzes` | `id`, `match_id`, `question_ids`, `created_at`, `expires_at` | Unique `match_id`; foreign key to `matches(id)` |
+| `quiz_responses` | `id`, `quiz_id`, `user_id`, `answers`, `status`, `submitted_at` | `status` accepts `completed` or `skipped`; unique `(quiz_id, user_id)` |
+| `match_activities` | `id`, `match_id`, `activity_id`, `position` | Unique `(match_id, activity_id)` |
+| `activity_responses` | `id`, `match_id`, `activity_id`, `user_id`, `response`, `created_at` | `response` accepts `interested` or `not_now`; unique `(match_id, activity_id, user_id)` |
+
+Indexes exist for swipe swipers/targets/actions, both match participant columns, daily pick date, match quizzes, quiz quiz IDs/user IDs, match activities and activity match/user IDs.
+
+Entity overview:
+
+```text
+users 1---N swipes N---1 users
+users 1---N matches N---1 users
+matches 1---1 match_quizzes 1---N quiz_responses
+matches 1---N match_activities
+matches 1---N activity_responses
+```
+
+`UNIQUE(swiper_id, target_id)` prevents a second swipe for the same pair and makes refresh-safe feed exclusion possible. Undo removes the latest swipe, and if that swipe created a match, its match, quiz, quiz responses, activities and activity responses are removed in one transaction.
+
+## Privacy Model
+
+1. `GET /feed` returns profiles but never incoming-like records.
+2. `POST /swipe` creates a match only after finding a server-side reciprocal like.
+3. Quiz responses are private until both sides have `completed`. Skips are silent, and waiting and expired states do not expose skip or partial state.
+4. Activity endpoints return `mutual: true` only when both rows contain `interested`; one-sided responses are omitted.
+5. `findOwnedMatch()` verifies that the match contains `user_demo` before quiz or activity data is returned.
+6. API failures use the existing Express `errorHandler.js` or explicit status responses. The reveal is 403 until complete.
+
+## Smart Discovery
+
+The estimated compatibility algorithm in `server/utils/compatibility.js` starts at `50` raw points:
+
+| Factor | Points |
+|---|---:|
+| Each shared interest | 8, capped at 32 |
+| Same city | 12 |
+| Same college | 10 |
+| Age difference 0–1 | 8 |
+| Age difference 2–3 | 5 |
+| Matching `lookingFor` value | 6 |
+
+The raw result is capped to a displayed range of `62` through `98`. It is not a normalized percentage and is not a validated relationship prediction. The UI labels it as an estimated compatibility score.
+
+## API Documentation
+
+The server also exposes `/api/*` aliases for the feed, swipe, matches, profiles and discover routes.
+
+| Method | Path | Purpose |
+|---|---|---|
+| `GET` | `/health`, `/api/health` | Server status |
+| `GET` | `/feed` | Ranked and filtered unswiped profiles |
+| `POST` | `/swipe` | Record a swipe and detect a match |
+| `GET` | `/matches` | Mutual matches and small journey indicators |
+| `GET` | `/matches/:matchId/quiz` | Quiz questions, expiry and demo-only progress state |
+| `POST` | `/matches/:matchId/quiz/answers` | Submit immutable quiz answers |
+| `POST` | `/matches/:matchId/quiz/skip` | Store a silent skip |
+| `GET` | `/matches/:matchId/quiz/reveal` | Reveal only after both complete |
+| `GET` | `/matches/:matchId/activities` | Cards and demo user’s own responses |
+| `POST` | `/matches/:matchId/activities/:activityId/respond` | Interested, not now or withdraw |
+| `GET` | `/profiles/:id` | Full profile details |
+| `GET` | `/discover/stats` | Remaining profiles and journey counts |
+| `GET` | `/discover/daily-pick` | Today’s featured profile |
+| `POST` | `/undo` | Remove latest swipe and reconcile a match |
+| `POST` | `/reset` | Re-seed all demo state |
+
+### Feed
+
+```bash
+curl http://localhost:5000/feed
+```
+
+```json
+{
+  "success": true,
+  "count": 32,
+  "profiles": [
+    {
+      "id": "prof_1",
+      "name": "Aarav Sharma",
+      "compatibility": 98,
+      "compatibilityReasons": ["Shared interests in Photography & Coffee"]
+    }
+  ]
+}
+```
+
+### Swipe
+
+```bash
+curl -X POST http://localhost:5000/swipe \
+  -H "Content-Type: application/json" \
+  -d "{\"targetUserId\":\"prof_1\",\"action\":\"like\"}"
+```
+
+```json
+{
+  "success": true,
+  "action": "like",
+  "isMatch": true,
+  "match": { "id": "prof_1", "name": "Aarav Sharma", "matchId": 1 },
+  "nextProfile": { "id": "prof_2", "name": "Maya Chen" }
+}
+```
+
+### Quiz
+
+```bash
+curl http://localhost:5000/matches/1/quiz
+```
+
+```json
+{
+  "success": true,
+  "status": "available",
+  "expiry": "2026-11-21T18:50:27.300Z",
+  "questions": [
+    { "id": "q1", "text": "Choose the setting", "options": ["Mountains", "Beaches"] }
+  ]
+}
+```
+
+After submission:
+
+```json
+{ "success": true, "status": "reveal" }
+```
+
+`GET /matches/:matchId/quiz/reveal` returns `agreedCount`, `agreements`, `differences` and an `opener`. It returns 403 until both completed.
+
+### Activities
+
+```bash
+curl -X POST http://localhost:5000/matches/1/activities/a-coffee-walk/respond \
+  -H "Content-Type: application/json" \
+  -d "{\"response\":\"interested\"}"
+```
+
+```json
+{ "success": true, "mutual": false }
+```
+
+Each card returned by `GET /matches/:matchId/activities` includes `id`, `title`, `description`, `icon`, `interestTags`, `ownResponse` and `mutual`. No unmutual partner response is returned.
+
+## Setup and Running
+
+Prerequisites:
+
+- Node.js
+- npm
+
+`package.json` does not declare an `engines` version. This README was verified with Node.js 24.19.0 and npm.
+
+No external database service is required.
+
+```bash
+cd CoyAssignment
+npm install
+npm run dev
+```
+
+Development ports:
+
+- Frontend: `http://localhost:3000`
+- Backend: `http://localhost:5000`
+
+The Vite proxy in `vite.config.js` sends API paths to port `5000`.
+
+Production build and run:
+
 ```bash
 npm run build
 npm start
 ```
-Open **[http://localhost:5000](http://localhost:5000)** in your browser.
 
-#### Option B: Concurrent Development Mode (Vite HMR + Express)
+Production serves the React build and API on `http://localhost:5000`.
+
+Environment variables:
+
+- `PORT`: Express port, default `5000`
+- `DB_PATH`: SQLite file path
+- `VITE_API_URL`: API base used by standalone Vite; see `.env.example`
+
+Re-seed:
+
 ```bash
-npm run dev
+curl -X POST http://localhost:5000/reset
 ```
-- Frontend: **http://localhost:3000** (with proxy to backend)
-- Backend: **http://localhost:5000**
 
----
+You can also use the Reset Demo button in the app.
 
-## 8. Test Verification Scenarios
+## Demo Guide
 
-You can verify all scenarios directly in the browser:
+1. Open `http://localhost:3000/discover`. Like **Aarav Sharma**. He is one of the seeded profiles with `hasPreLiked: true`, so it creates a match and Match Hub data.
+2. Like **Maya Chen**. No seeded reciprocal swipe is present, so no match appears.
+3. Open Aarav’s Match Hub and complete or reveal the quiz. Aarav’s counterpart response is already simulated for the seed state.
+4. Open another seeded match and start a quiz there to show the waiting state.
+5. Open Aarav’s Activities and choose the first activity he has already been seeded to prefer, so the mutual unlock appears.
+6. Use undo in Discover, refresh the page and confirm the match, quiz and activity state is reconciled.
 
-1. **Scenario 1 (Swipe & Disappear):** Like or pass a card. It disappears. Refresh the page; it remains gone.
-2. **Scenario 2 (Mutual Match):** Like **Aarav Sharma** (pre-seeded incoming like). The celebratory "IT'S A MATCH!" modal immediately appears, and Aarav appears in the Matches tab.
-3. **Scenario 3 (Pass Persistence):** Pass a card. It is removed and never appears again.
-4. **Scenario 4 (Unilateral Like Privacy):** Like a profile that has not liked the user (e.g., Maya Chen). The card is recorded as liked, no match is created, and no incoming like data is ever exposed.
-5. **Scenario 5 (Persistence):** Refresh the browser; all swipes and matches remain persisted in `server/database/coy.db`.
-6. **Scenario 6 (Undo & Match Reconciliation):** Click Undo (`↺`). The last swipe is deleted, and if a match was created exclusively by that swipe, it is removed from the Matches list.
-7. **Scenario 7 (Empty State & Reset):** Swipe through all cards or filter strictly. A friendly Empty State appears with a 1-click **Reset Demo Deck** button.
+Reset with `POST /reset` if the demo state becomes difficult to demonstrate.
 
-## 9. Match → Quiz → Plan Journey
+## Demo Simulation
 
-Mutual matches open a **Match Hub** at `/matches/:matchId` with Profile, Quiz and Activities sections. The five-question quiz and activity suggestions remain private until their mutual reveal conditions are met.
+The database contains only seeded profiles; there is no second real account. `quizSimulator.js` derives deterministic quiz answers from profile interests and IDs. `activitySimulator.js` derives deterministic activity responses from shared interests.
 
-### New database tables
+The reset seeds **Aarav Sharma** as a match with both counterpart journey states prepared for demonstration. These data stores are not random. In a real product, the counterparts would submit responses through the same API.
 
-- `match_quizzes`: selected question IDs, creation time and three-day expiry.
-- `quiz_responses`: one immutable demo response or silent skip per quiz.
-- `match_activities`: the stable set of up to three suggested cards.
-- `activity_responses`: private interested/not-now responses.
+## Testing
 
-### New API endpoints
+Verified: `server/test-api.js`, production build, server startup and health, quiz hiding/reveal/skip/expiry, activity unlock/privacy, undo cleanup and unknown-match ownership. Mobile layout and keyboard-only interaction were not automated.
 
-- `GET /matches/:matchId/quiz`
-- `POST /matches/:matchId/quiz/answers`
-- `POST /matches/:matchId/quiz/skip`
-- `GET /matches/:matchId/quiz/reveal`
-- `GET /matches/:matchId/activities`
-- `POST /matches/:matchId/activities/:activityId/respond`
+Run the existing backend script while the server is running:
 
-### Demo simulation
+```bash
+npm start
+node server/test-api.js
+```
 
-Seeded profiles cannot log in. `server/services/quizSimulator.js` deterministically derives their quiz answers from profile interests and IDs. `server/services/activitySimulator.js` deterministically derives their activity responses from shared interests. This simulation is separate from real response storage and exists only to make the demo verifiable.
+The script is a manual HTTP check. It does not replace automated test coverage.
 
-### Privacy guarantees
+## Known Limitations
 
-- Quiz answers, skips and partial progress are not returned before both quiz responses are complete.
-- Expired skipped and waiting states are presented as waiting/ended states rather than skipped/answered facts.
-- Activity responses are exposed only when both users chose `interested`.
-- Every Match Hub route verifies that the match contains `user_demo`.
-- Undo and reset remove or re-create match journey data consistently.
+- The app supports one fixed demo user and has no authentication.
+- There is no real second user; counterpart quiz answers and activity taps are deterministic simulations.
+- The quiz opener action copies text to the clipboard.
+- SQLite is suitable for local demo use, not concurrent production scale.
+- Activity and quiz content are curated, not learned from real user behavior.
+- Some seeded database runtime files are created locally and are ignored by Git.
+
+Potential production next steps: authentication and per-user sessions, server-authoritative notifications, production database migrations, engagement analytics, and consent-safe matching with reporting and moderation.
+
+## Screenshots
+
+Place images in `docs/screenshots/` and update these references after capture.
+
+- [Discover deck](docs/screenshots/discover-deck.png) — TODO
+- [Swipe stamps](docs/screenshots/swipe-stamps.png) — TODO
+- [Match modal](docs/screenshots/match-modal.png) — TODO
+- [Matches page](docs/screenshots/matches.png) — TODO
+- [Quiz question](docs/screenshots/quiz-question.png) — TODO
+- [Quiz waiting](docs/screenshots/quiz-waiting.png) — TODO
+- [Quiz reveal](docs/screenshots/quiz-reveal.png) — TODO
+- [Activity cards](docs/screenshots/activity-cards.png) — TODO
+- [Mutual unlock](docs/screenshots/mutual-unlock.png) — TODO
+- [Empty state](docs/screenshots/empty-state.png) — TODO
+- [Filters](docs/screenshots/filters.png) — TODO
+
+## Author
+
+Built by **Sahil, Full Stack Developer (MERN)**.
+
+- GitHub: [GitHub profile placeholder](https://github.com/)
+- LinkedIn: [LinkedIn profile placeholder](https://www.linkedin.com/)
