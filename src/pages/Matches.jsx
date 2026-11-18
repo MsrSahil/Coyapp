@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Heart, Sparkles, MapPin, Calendar, User, GraduationCap } from 'lucide-react';
 import ProfileDetail from '../components/ProfileDetail';
 
 export default function Matches({ matches = [], loading = false }) {
   const [selectedMatch, setSelectedMatch] = useState(null);
+  const navigate = useNavigate();
 
   return (
     <div className="flex flex-col h-full overflow-hidden bg-coy-bg text-coy-charcoal">
@@ -48,7 +50,7 @@ export default function Matches({ matches = [], loading = false }) {
                 key={match.id}
                 whileHover={{ y: -3 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => setSelectedMatch(match)}
+                onClick={() => navigate(`/matches/${match.matchId}`)}
                 className="group relative rounded-3xl overflow-hidden aspect-[3/4] cursor-pointer bg-stone-900 shadow-card border border-stone-200/60"
               >
                 <img
@@ -79,15 +81,18 @@ export default function Matches({ matches = [], loading = false }) {
                   </p>
 
                   <div className="mt-2 flex items-center justify-between text-[11px] text-rose-200 font-medium pt-1.5 border-t border-white/10">
-                    <span className="flex items-center gap-1 hover:text-white transition-colors">
+                    <button type="button" onClick={(event) => { event.stopPropagation(); setSelectedMatch(match); }} className="flex items-center gap-1 hover:text-white transition-colors">
                       <User className="w-3 h-3 text-rose-300" /> View Profile
-                    </span>
-                    {match.compatibility && (
-                      <span className="text-[10px] font-extrabold text-amber-300">
-                        {match.compatibility}%
-                      </span>
-                    )}
+                    </button>
+                    <button type="button" onClick={(event) => { event.stopPropagation(); navigate(`/matches/${match.matchId}`); }} className="text-[10px] font-extrabold text-white bg-white/10 px-2 py-1 rounded-full">
+                      {match.revealReady ? 'Reveal ready' : match.quizReady ? 'Quiz ready' : 'Quiz ready'}
+                    </button>
                   </div>
+                  {match.planReady && (
+                    <button type="button" onClick={(event) => { event.stopPropagation(); navigate(`/matches/${match.matchId}?section=activities`); }} className="mt-1.5 text-[10px] font-extrabold text-emerald-900 bg-emerald-100 px-2 py-1 rounded-full">
+                      Plan ready
+                    </button>
+                  )}
                 </div>
               </motion.div>
             ))}

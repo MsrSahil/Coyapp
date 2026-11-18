@@ -2,6 +2,8 @@ import { Router } from 'express';
 import db from '../database/db.js';
 import { DEMO_USER_ID } from '../database/seed.js';
 import { formatProfile } from './feed.js';
+import { selectQuizQuestions } from '../services/quizSimulator.js';
+import { suggestActivities } from '../services/activitySuggester.js';
 
 const router = Router();
 
@@ -74,7 +76,37 @@ router.post('/', (req, res, next) => {
             VALUES (?, ?, CURRENT_TIMESTAMP)
           `).run(u1, u2);
 
-          matchDetails = formatProfile(targetRow, demoUserRow);
+          const matchRow = db.prepare(`
+            SELECT id FROM matches WHERE user_one_id = ? AND user_two_id = ?
+          `).get(u1, u2);
+          if (matchRow) {
+            const quizIds = selectQuizQuestions(
+              matchRow.id,
+              JSON.parse(demoUserRow.interests || '[]'),
+              JSON.parse(targetRow.interests || '[]')
+            );
+            const expiresAt = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();
+            db.prepare(`
+              INSERT OR IGNORE INTO match_quizzes (match_id, question_ids, expires_at)
+              VALUES (?, ?, ?)
+            `).run(matchRow.id, JSON.stringify(quizIds), expiresAt);
+
+            const activityIds = suggestActivities(
+              matchRow.id,
+              JSON.parse(demoUserRow.interests || '[]'),
+              JSON.parse(targetRow.interests || '[]')
+            );
+            const insertActivity = db.prepare(`
+              INSERT OR IGNORE INTO match_activities (match_id, activity_id, position)
+              VALUES (?, ?, ?)
+            `);
+            activityIds.forEach((activityId, index) => insertActivity.run(matchRow.id, activityId, index));
+          }
+
+          matchDetails = {
+            ...formatProfile(targetRow, demoUserRow),
+            matchId: matchRow.id
+          };
         }
       }
     });

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Sparkles, X, ArrowRight, User } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
-export default function MatchModal({ match, onClose, onViewMatches }) {
+export default function MatchModal({ match, onClose, onViewMatches, onTakeQuiz, onSeeIdeas }) {
   useEffect(() => {
     if (match) {
       // Trigger festive celebratory confetti
@@ -150,6 +150,16 @@ export default function MatchModal({ match, onClose, onViewMatches }) {
             >
               Continue Discovering
             </button>
+            {match.matchId && (
+              <div className="grid grid-cols-2 gap-2">
+                <button type="button" onClick={onTakeQuiz} className="py-3 rounded-2xl border border-white/15 text-xs font-bold text-white">
+                  Take the quiz
+                </button>
+                <button type="button" onClick={onSeeIdeas} className="py-3 rounded-2xl border border-white/15 text-xs font-bold text-white">
+                  See ideas
+                </button>
+              </div>
+            )}
           </div>
         </motion.div>
       </motion.div>

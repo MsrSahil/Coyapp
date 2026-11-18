@@ -257,3 +257,35 @@ You can verify all scenarios directly in the browser:
 5. **Scenario 5 (Persistence):** Refresh the browser; all swipes and matches remain persisted in `server/database/coy.db`.
 6. **Scenario 6 (Undo & Match Reconciliation):** Click Undo (`↺`). The last swipe is deleted, and if a match was created exclusively by that swipe, it is removed from the Matches list.
 7. **Scenario 7 (Empty State & Reset):** Swipe through all cards or filter strictly. A friendly Empty State appears with a 1-click **Reset Demo Deck** button.
+
+## 9. Match → Quiz → Plan Journey
+
+Mutual matches open a **Match Hub** at `/matches/:matchId` with Profile, Quiz and Activities sections. The five-question quiz and activity suggestions remain private until their mutual reveal conditions are met.
+
+### New database tables
+
+- `match_quizzes`: selected question IDs, creation time and three-day expiry.
+- `quiz_responses`: one immutable demo response or silent skip per quiz.
+- `match_activities`: the stable set of up to three suggested cards.
+- `activity_responses`: private interested/not-now responses.
+
+### New API endpoints
+
+- `GET /matches/:matchId/quiz`
+- `POST /matches/:matchId/quiz/answers`
+- `POST /matches/:matchId/quiz/skip`
+- `GET /matches/:matchId/quiz/reveal`
+- `GET /matches/:matchId/activities`
+- `POST /matches/:matchId/activities/:activityId/respond`
+
+### Demo simulation
+
+Seeded profiles cannot log in. `server/services/quizSimulator.js` deterministically derives their quiz answers from profile interests and IDs. `server/services/activitySimulator.js` deterministically derives their activity responses from shared interests. This simulation is separate from real response storage and exists only to make the demo verifiable.
+
+### Privacy guarantees
+
+- Quiz answers, skips and partial progress are not returned before both quiz responses are complete.
+- Expired skipped and waiting states are presented as waiting/ended states rather than skipped/answered facts.
+- Activity responses are exposed only when both users chose `interested`.
+- Every Match Hub route verifies that the match contains `user_demo`.
+- Undo and reset remove or re-create match journey data consistently.

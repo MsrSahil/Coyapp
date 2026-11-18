@@ -4,6 +4,7 @@ import { RotateCcw } from 'lucide-react';
 import Home from './pages/Home';
 import Discover from './pages/Discover';
 import Matches from './pages/Matches';
+import MatchHub from './pages/MatchHub';
 import BottomNavigation from './components/BottomNavigation';
 import MatchModal from './components/MatchModal';
 import Toast from './components/Toast';
@@ -96,7 +97,11 @@ function MainLayout() {
             />
             <Route
               path="/matches"
-              element={<Matches matches={matches} />}
+              element={<Matches matches={matches} onToast={showToast} />}
+            />
+            <Route
+              path="/matches/:matchId"
+              element={<MatchHub onToast={showToast} />}
             />
             <Route path="*" element={<Navigate to="/discover" replace />} />
           </Routes>
@@ -114,6 +119,16 @@ function MainLayout() {
           onViewMatches={() => {
             setCurrentMatch(null);
             navigate('/matches');
+          }}
+          onTakeQuiz={() => {
+            const matchId = currentMatch.matchId;
+            setCurrentMatch(null);
+            if (matchId) navigate(`/matches/${matchId}?section=quiz`);
+          }}
+          onSeeIdeas={() => {
+            const matchId = currentMatch.matchId;
+            setCurrentMatch(null);
+            if (matchId) navigate(`/matches/${matchId}?section=activities`);
           }}
         />
       )}

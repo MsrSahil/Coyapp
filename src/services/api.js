@@ -83,6 +83,21 @@ export const api = {
     });
   },
 
+  getQuiz: (matchId) => request(`/matches/${matchId}/quiz`),
+  submitQuizAnswers: (matchId, answers) => request(`/matches/${matchId}/quiz/answers`, {
+    method: 'POST',
+    body: JSON.stringify({ answers })
+  }),
+  skipQuiz: (matchId) => request(`/matches/${matchId}/quiz/skip`, {
+    method: 'POST'
+  }),
+  getQuizReveal: (matchId) => request(`/matches/${matchId}/quiz/reveal`),
+  getActivities: (matchId) => request(`/matches/${matchId}/activities`),
+  respondToActivity: (matchId, activityId, response) => request(`/matches/${matchId}/activities/${activityId}/respond`, {
+    method: 'POST',
+    body: JSON.stringify({ response })
+  }),
+
   // GET /health
   getHealth: () => {
     return request('/health');

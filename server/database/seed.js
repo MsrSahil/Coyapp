@@ -1,4 +1,8 @@
 import db from './db.js';
+import { selectQuizQuestions, simulateQuizAnswers } from '../services/quizSimulator.js';
+import { suggestActivities } from '../services/activitySuggester.js';
+import { simulateActivityResponse } from '../services/activitySimulator.js';
+import { activities } from '../data/activities.js';
 
 export const DEMO_USER_ID = 'user_demo';
 
@@ -11,6 +15,10 @@ export function seedDatabase(force = false) {
 
   // Clear tables if forcing re-seed
   if (force) {
+    db.prepare('DELETE FROM activity_responses').run();
+    db.prepare('DELETE FROM match_activities').run();
+    db.prepare('DELETE FROM quiz_responses').run();
+    db.prepare('DELETE FROM match_quizzes').run();
     db.prepare('DELETE FROM matches').run();
     db.prepare('DELETE FROM swipes').run();
     db.prepare('DELETE FROM daily_picks').run();
@@ -737,6 +745,63 @@ export function seedDatabase(force = false) {
       INSERT OR REPLACE INTO daily_picks (user_id, profile_id, pick_date)
       VALUES (?, ?, ?)
     `).run(DEMO_USER_ID, 'prof_1', today);
+
+    // Seed one demonstrable mutual match: partner-side quiz/activity state is simulated.
+    insertSwipe.run(DEMO_USER_ID, 'prof_1', 'like');
+    const u1 = DEMO_USER_ID < 'prof_1' ? DEMO_USER_ID : 'prof_1';
+    const u2 = DEMO_USER_ID < 'prof_1' ? 'prof_1' : DEMO_USER_ID;
+    db.prepare(`
+      INSERT OR IGNORE INTO matches (user_one_id, user_two_id, created_at)
+      VALUES (?, ?, CURRENT_TIMESTAMP)
+    `).run(u1, u2);
+    const match = db.prepare('SELECT id FROM matches WHERE user_one_id = ? AND user_two_id = ?').get(u1, u2);
+    const prof1 = db.prepare('SELECT * FROM users WHERE id = ?').get('prof_1');
+    const demo = db.prepare('SELECT * FROM users WHERE id = ?').get(DEMO_USER_ID);
+
+    if (match) {
+      const questionIds = selectQuizQuestions(
+        match.id,
+        JSON.parse(demo.interests),
+        JSON.parse(prof1.interests)
+      );
+      const expiresAt = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();
+      const quizResult = db.prepare(`
+        INSERT OR IGNORE INTO match_quizzes (match_id, question_ids, expires_at)
+        VALUES (?, ?, ?)
+      `).run(match.id, JSON.stringify(questionIds), expiresAt);
+      const quiz = db.prepare('SELECT * FROM match_quizzes WHERE match_id = ?').get(match.id);
+      if (quiz) {
+        db.prepare(`
+          INSERT OR IGNORE INTO quiz_responses (quiz_id, user_id, answers, status, submitted_at)
+          VALUES (?, ?, ?, 'completed', CURRENT_TIMESTAMP)
+        `).run(quiz.id, prof1.id, JSON.stringify(simulateQuizAnswers(prof1, questionIds)));
+      }
+
+      const activityIds = suggestActivities(
+        match.id,
+        JSON.parse(demo.interests),
+        JSON.parse(prof1.interests)
+      );
+      activityIds.forEach((activityId, position) => {
+        db.prepare(`
+          INSERT OR IGNORE INTO match_activities (match_id, activity_id, position)
+          VALUES (?, ?, ?)
+        `).run(match.id, activityId, position);
+      });
+
+      const firstActivityId = activityIds[0];
+      const firstActivity = activities.find(a => a.id === firstActivityId);
+      if (firstActivity) {
+        const shared = JSON.parse(demo.interests).filter(tag =>
+          JSON.parse(prof1.interests).includes(tag)
+        );
+        const partnerResponse = 'interested';
+        db.prepare(`
+          INSERT OR IGNORE INTO activity_responses (match_id, activity_id, user_id, response)
+          VALUES (?, ?, ?, ?)
+        `).run(match.id, firstActivityId, prof1.id, partnerResponse);
+      }
+    }
   });
 
   insertAll();

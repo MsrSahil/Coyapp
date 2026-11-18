@@ -32,13 +32,40 @@ router.get('/stats', (req, res, next) => {
 
     const superLikesRemaining = Math.max(0, 3 - usedSuperLikesToday);
 
+    const quizzesToReveal = db.prepare(`
+      SELECT COUNT(*) count
+      FROM match_quizzes mq
+      JOIN matches m ON m.id = mq.match_id
+      JOIN quiz_responses demo_q ON demo_q.quiz_id = mq.id AND demo_q.user_id = ? AND demo_q.status = 'completed'
+      JOIN users partner ON partner.id = CASE WHEN m.user_one_id = ? THEN m.user_two_id ELSE m.user_one_id END
+      JOIN quiz_responses partner_q ON partner_q.quiz_id = mq.id AND partner_q.user_id = partner.id AND partner_q.status = 'completed'
+      WHERE m.user_one_id = ? OR m.user_two_id = ?
+    `).get(DEMO_USER_ID, DEMO_USER_ID, DEMO_USER_ID, DEMO_USER_ID).count;
+
+    const mutualPlans = db.prepare(`
+      SELECT COUNT(DISTINCT ar.match_id) count
+      FROM activity_responses ar
+      JOIN matches m ON m.id = ar.match_id
+      WHERE (m.user_one_id = ? OR m.user_two_id = ?)
+        AND ar.response = 'interested'
+        AND EXISTS (
+          SELECT 1 FROM activity_responses ar2
+          WHERE ar2.match_id = ar.match_id
+            AND ar2.activity_id = ar.activity_id
+            AND ar2.user_id != ar.user_id
+            AND ar2.response = 'interested'
+        )
+    `).get(DEMO_USER_ID, DEMO_USER_ID).count;
+
     res.json({
       success: true,
       remainingProfiles: remaining,
       totalSwipes,
       totalMatches,
       superLikesRemaining,
-      dailySuperLikeLimit: 3
+      dailySuperLikeLimit: 3,
+      quizzesToReveal,
+      mutualPlans
     });
   } catch (error) {
     next(error);
@@ -118,7 +145,19 @@ router.post('/undo', (req, res, next) => {
       const u1 = DEMO_USER_ID < targetId ? DEMO_USER_ID : targetId;
       const u2 = DEMO_USER_ID < targetId ? targetId : DEMO_USER_ID;
 
-      db.prepare('DELETE FROM matches WHERE user_one_id = ? AND user_two_id = ?').run(u1, u2);
+      const matchRow = db.prepare(`
+        SELECT id FROM matches WHERE user_one_id = ? AND user_two_id = ?
+      `).get(u1, u2);
+      if (matchRow) {
+        const quizzes = db.prepare('SELECT id FROM match_quizzes WHERE match_id = ?').all(matchRow.id);
+        for (const quiz of quizzes) {
+          db.prepare('DELETE FROM quiz_responses WHERE quiz_id = ?').run(quiz.id);
+        }
+        db.prepare('DELETE FROM match_quizzes WHERE match_id = ?').run(matchRow.id);
+        db.prepare('DELETE FROM activity_responses WHERE match_id = ?').run(matchRow.id);
+        db.prepare('DELETE FROM match_activities WHERE match_id = ?').run(matchRow.id);
+        db.prepare('DELETE FROM matches WHERE id = ?').run(matchRow.id);
+      }
     });
 
     undoTransaction();
